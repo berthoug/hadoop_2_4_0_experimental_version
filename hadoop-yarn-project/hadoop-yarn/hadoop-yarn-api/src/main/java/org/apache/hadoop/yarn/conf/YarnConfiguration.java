@@ -204,6 +204,7 @@ public class YarnConfiguration extends Configuration {
   
   public static final String RM_RESOURCE_TRACKER_ADDRESS =
     RM_PREFIX + "resource-tracker.address";
+  public static final String RM_RESOURCE_TRACKER_PORT = RM_PREFIX + "resource-tracker.port";
   public static final int DEFAULT_RM_RESOURCE_TRACKER_PORT = 8031;
   public static final String DEFAULT_RM_RESOURCE_TRACKER_ADDRESS =
     "0.0.0.0:" + DEFAULT_RM_RESOURCE_TRACKER_PORT;
