@@ -52,21 +52,20 @@ done
 # copy data to the remote directories
 echo "***   Copying the Distro   ***"
 mkdir -p $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/Java
-echo "*** cp java ***"
-echo $JAVA_Folder
-cp -nr    $JAVA_Folder/*                                                         $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/Java                        
-echo "*** cp lib ndb *** "                                           
-cp       $LIB_NDB_CLIENT_BIN                                                     $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/lib/native
 echo "*** cp hop conf ***"
 cp -rf   $HOP_Src_Folder/scripts/deployment_scripts/hop_conf                     $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/
 echo "*** cp deployment.propertes ***"
 cp       $HOP_Src_Folder/scripts/deployment_scripts/deployment.properties        $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/hop_conf/
-echo "*** cp stream library ***"
-cp -rf   $NDB_EVENT_STREAMING_DISTRIBUTION_DIR/hopsndbevent                      $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/
-mkdir $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/hopsndbevent/bin
-mkdir $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/hopsndbevent/obj
+
+echo "*** cp distributed simulator ***"
+cp $HOP_Src_Folder/hadoop-tools/distributedLoadSimulator/target/distributedLoadSimulator-2.4.0.jar $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/share/hadoop/common/lib/
+cp $HOP_Src_Folder/hadoop-tools/distributedLoadSimulator/target/distributedLoadSimulator-2.4.0.jar $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/share/hadoop/tools/lib/
+cp $HOP_Src_Folder/hadoop-tools/distributedLoadSimulator/target/distributedLoadSimulator-2.4.0.jar $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/share/hadoop/tools/sls/
+cp -r $HOP_Src_Folder/hadoop-tools/distributedLoadSimulator/src/main/resources/*  $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/share/hadoop/tools/sls
 
 echo "*** parallel-rsync ***"
+echo "parallel-rsync -arz -v -H "${All_Unique_Hosts[*]}" --user $HOP_User    $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/        $HOP_Dist_Folder
+"
 parallel-rsync -arz -v -H "${All_Unique_Hosts[*]}" --user $HOP_User    $HOP_Src_Folder/hadoop-dist/target/$Hadoop_Version/        $HOP_Dist_Folder
 
 
@@ -102,38 +101,3 @@ do
 	#copying the script files to sbin
 	ssh $connectStr cp -r            $HOP_Dist_Folder/hop_conf/scripts                               $HOP_Dist_Folder/sbin/
 done
-
-#### hop_disto deployment is done, so lets start compile c++ ndbevent streaming library
-#echo "================   NDB Event streaming shared library builiding ========================="
-#for i in ${All_Unique_Hosts[@]}
-#do
- #   connectStr="$HOP_User@$i"
-  #  LIB_NDB_CLIENT_FILE_PATH=$HOP_Dist_Folder/lib/native/libndbclient.so.6.0.0
-   # LIB_HOPS_NDB_EVENT_LIBRARY=$HOP_Dist_Folder/lib/native/libhopsndbevent.so
-
-
-    #echo "========== Perform symbolic link checking for Event Streaming shared library on cloud$i.sics.se =========="
-    #if ssh $connectStr stat $LIB_NDB_CLIENT_FILE_PATH \> /dev/null 2\>\&1
-    #then
-     #   echo "===> $LIB_NDB_CLIENT_FILE_PATH already have the symbolic link"
-    #else
-     #   echo "===> $LIB_NDB_CLIENT_FILE_PATH is not created symbolic link.. creating now.."
-      #  ssh  $connectStr               "cd $HOP_Dist_Folder/lib/native; ln -s libndbclient.so libndbclient.so.6.0.0"
-    #fi
-    #echo "========== Cleaning up previous libhopsndbevent distribution =========="
-
-
-    #if ssh $connectStr stat $LIB_HOPS_NDB_EVENT_LIBRARY \> /dev/null 2\>\&1
-    #then
-     #   ssh  $connectStr                "rm  $HOP_Dist_Folder/lib/native/libhopsndbevent.so"
-    #fi
-
-    #ssh  $connectStr                "rm -rf $HOP_Dist_Folder/lib/native/hopsndbevent"
-    
-   # echo "========== Remote compilation starts now =========="
-   # ssh  $connectStr               "cd $HOP_Dist_Folder/hopsndbevent ; make remove; make"
-   # echo "========== Compilation is done. copy libhopsndbevent.so to native lib folder =========="
-
-    #ssh  $connectStr               "cp $HOP_Dist_Folder/hopsndbevent/bin/libhopsndbevent.so $HOP_Dist_Folder/lib/native"
-#    ssh  $connectStr               "cp $HOP_Dist_Folder/hopsndbevent/EventAPIConfig.ini /home/$HOP_User"
-#done

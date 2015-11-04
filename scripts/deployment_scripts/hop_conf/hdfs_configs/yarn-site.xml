@@ -108,16 +108,16 @@
 
    <property>
     <name>yarn.resourcemanager.ha.automatic-failover.enabled</name>
-    <value>true</value>
+    <value>false</value>
   </property>
 
  <property>
     <name>yarn.resourcemanager.ha.enabled</name>
-    <value>true</value>
+    <value>false</value>
   </property>
 <property>
     <name>yarn.resourcemanager.recovery.enabled</name>
-    <value>true</value>
+    <value>false</value>
   </property>
 <property>
     <name>yarn.resourcemanager.ha.rm-ids</name>

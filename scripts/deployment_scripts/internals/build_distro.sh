@@ -5,36 +5,6 @@
 
 source deployment.properties
 
-    #Build DAL	
-    CMD="mvn "	    
-    if [ $HOP_Rebuild_Dal = true ]; then
-	    if [ $HOP_Do_Clean_Build = true ]; then
-		    CMD="$CMD clean "
-	    fi	
-       	CMD="$CMD install -Dmaven.test.skip=true -f $HOP_Metadata_Dal_Folder/pom.xml"
-	$CMD
-    fi
-
-    #Build DAL NDB implementation
-    CMD="mvn "	    
-    if [ $HOP_Rebuild_Dal_Impl = true ]; then
-	    if [ $HOP_Do_Clean_Build = true ]; then
-		    CMD="$CMD clean "
-	    fi	
-	CMD="$CMD assembly:assembly -DskipTests -f $HOP_Metadata_Dal_Impl_Folder/pom.xml"
-	$CMD
-    fi
-
-    #Build DAL NDB implementation
-    CMD="mvn "	    
-    if [ $HOP_Rebuild_Leader_Election_Impl = true ]; then
-	    if [ $HOP_Do_Clean_Build = true ]; then
-		    CMD="$CMD clean "
-	    fi	
-	CMD="$CMD install -f $HOP_Leader_Election_Impl_Folder/pom.xml"
-	$CMD
-    fi
-
     #Build Hadoop
     CMD="mvn "	    
     if [ $HOP_Rebuild_HDFS = true ]; then
